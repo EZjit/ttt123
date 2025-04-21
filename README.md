@@ -10,7 +10,7 @@ This project is a microservice designed to manage delivery services. It includes
 
 ```bash
 git clone https://github.com/EZjit/ttt123
-cd ra_delta_test_task
+cd ttt123
 ```
 
 2.Copy and Configure the Environment File
