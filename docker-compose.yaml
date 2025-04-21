@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+      # - mongodb
+      # - rabbitmq
+    ports:
+      - "8000:8000"
+    env_file: ./config/.env
+
+    command: uv run app/main.py
+    networks:
+      - mysqlnet
+      - webnet
+  db:
+    image: mysql:9.1
+    ports:
+      - "3306:3306"
+    env_file: ./config/.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mysqlnet
+
+  redis:
+    image: redis:7.4
+    ports:
+      - "6379:6379"
+    env_file: ./config/.env
+    networks:
+      - webnet
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file: ./config/.env
+    networks:
+      - webnet
+
+volumes:
+  mysql_data:
+networks:
+  # Network for db, use it for services that need access to the db:
+  mysqlnet:
+  # Network for your internals, use it by default:
+  webnet:
